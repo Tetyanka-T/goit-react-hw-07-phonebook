@@ -1,11 +1,14 @@
 import { useState } from 'react';
-import { connect } from 'react-redux';
-import { addContact } from '../../redux/contacts-actions';
+import { useDispatch } from 'react-redux';
+import { addContact } from 'redux/contacts-actions';
+
 import s from 'components/Form/Form.module.css';
 
-function Form({ onSubmit }) {
+function Form() {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
+
+  const dispatch = useDispatch();
 
   const handleChange = e => {
     const { name, value } = e.currentTarget;
@@ -26,8 +29,8 @@ function Form({ onSubmit }) {
 
   const handleSubmit = e => {
     e.preventDefault();
-    onSubmit({ name, number });
 
+    dispatch(addContact(name, number));
     reset();
   };
   const reset = () => {
@@ -73,7 +76,4 @@ function Form({ onSubmit }) {
   );
 }
 
-const mapDispatchToProps = dispatch => ({
-  onSubmit: task => dispatch(addContact(task)),
-});
-export default connect(null, mapDispatchToProps)(Form);
+export default Form;
