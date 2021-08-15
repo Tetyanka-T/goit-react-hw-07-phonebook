@@ -1,7 +1,9 @@
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
-// import { addContact } from 'redux/contacts/contacts-actions';
-import { addContact } from 'redux/contacts';
+import { useDispatch, useSelector } from 'react-redux';
+import { Redirect } from 'react-router-dom';
+import toast from 'react-hot-toast';
+
+import { contactOperations, contactSelectors } from 'redux/contacts';
 import s from 'components/Form/Form.module.css';
 
 function Form() {
@@ -9,6 +11,17 @@ function Form() {
   const [number, setNumber] = useState('');
 
   const dispatch = useDispatch();
+  const contacts = useSelector(contactSelectors.getContacts);
+  const isLoading = useSelector(contactSelectors.getIsLoading);
+
+  const checkContact = (contacts, name) => {
+    const searchSameName = contacts.map(contact => contact.name).includes(name);
+
+    if (searchSameName) {
+      toast.error(`${name} is already in contacts`);
+      return searchSameName;
+    }
+  };
 
   const handleChange = e => {
     const { name, value } = e.currentTarget;
@@ -30,8 +43,15 @@ function Form() {
   const handleSubmit = e => {
     e.preventDefault();
 
-    dispatch(addContact(name, number));
+    const sameContact = checkContact(contacts, name, number);
+
+    if (sameContact) return;
+
+    dispatch(contactOperations.createContact({ name, number }));
+
     reset();
+
+    toast.success('Done!');
   };
   const reset = () => {
     setName('');
@@ -40,6 +60,7 @@ function Form() {
 
   return (
     <>
+      {isLoading && <Redirect to="/contacts" />}
       <form className={s.form} onSubmit={handleSubmit}>
         <label className={s.label}>
           Name

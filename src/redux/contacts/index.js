@@ -1,18 +1,2 @@
-export {
-  fetchContactsRequest,
-  fetchContactsSuccess,
-  fetchContactsError,
-  addContactRequest,
-  addContactSuccess,
-  addContactError,
-  deleteContactRequest,
-  deleteContactSuccess,
-  deleteContactError,
-  changeFilter,
-} from './contacts-actions';
-export {
-  getContacts,
-  getFilter,
-  getVisibleContact,
-} from './contacts-selectors';
-export { addContact, deleteContact, fetchContacts } from './contacts-operation';
+export * as contactOperations from 'redux/contacts/contacts-operation';
+export * as contactSelectors from 'redux/contacts/contacts-selectors';
